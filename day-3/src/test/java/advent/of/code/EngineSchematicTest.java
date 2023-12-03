@@ -42,6 +42,38 @@ public class EngineSchematicTest {
 
     }
 
+    @Test
+    void gearRatio() {
+        final List<String> lines = new ArrayList<>();
+        lines.add("467..114..");
+        lines.add("...*......");
+        lines.add("..35..633.");
+        lines.add("......#...");
+        lines.add("617*......");
+        lines.add(".....+.58.");
+        lines.add("..592.....");
+        lines.add("......755.");
+        lines.add("...$.*....");
+        lines.add(".664.598..");
+
+        EngineSchematic engineSchematic = new EngineSchematic(lines);
+
+        Assertions.assertThat(engineSchematic.findGearRatios())
+                .containsExactlyInAnyOrder(
+                        new GearRatio(
+                                new EngineSchematicSymbol(1, 3, '*'),
+                                List.of(
+                                        new EngineSchematicNumber(0, List.of(0, 1, 2), 467),
+                                        new EngineSchematicNumber(2, List.of(2, 3), 35))),
+                        new GearRatio(
+                                new EngineSchematicSymbol(8, 5, '*'),
+                                List.of(
+                                        new EngineSchematicNumber(7, List.of(6, 7, 8), 755),
+                                        new EngineSchematicNumber(9, List.of(5, 6, 7), 598)))
+                );
+
+    }
+
 
     private static Stream<? extends Arguments> symbolLines() {
         return Stream.of(
@@ -81,4 +113,5 @@ public class EngineSchematicTest {
     void extractNumbers(String line, List<EngineSchematicNumber> expectedNumbers) {
         Assertions.assertThat(EngineSchematic.findNumbersFromLine(0, line)).containsExactlyInAnyOrderElementsOf(expectedNumbers);
     }
+
 }

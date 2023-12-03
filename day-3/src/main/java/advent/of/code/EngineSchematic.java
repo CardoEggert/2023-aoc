@@ -4,22 +4,43 @@ import java.util.*;
 
 public record EngineSchematic(List<String> lines) {
 
+    private static final List<EngineSchematicNumber> numbers = new ArrayList<>();
+    private static final List<EngineSchematicSymbol> symbols = new ArrayList<>();
     private static final Set<Character> digits = Set.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
-    public List<PartNumber> extractPartNumbers() {
-        // Read in the values to maps
-        final List<EngineSchematicNumber> numbers = new ArrayList<>();
-        final List<EngineSchematicSymbol> symbols = new ArrayList<>();
-        for (int rowIndex = 0; rowIndex < lines.size(); rowIndex++) {
-            numbers.addAll(findNumbersFromLine(rowIndex, lines.get(rowIndex)));
-            symbols.addAll(findSymbolsFromLine(rowIndex, lines.get(rowIndex)));
+    public List<GearRatio> findGearRatios() {
+        load();
+        // Extract gear ratios
+        final List<GearRatio> gearRatios = new ArrayList<>();
+        for (EngineSchematicSymbol symbol : symbols) {
+            if (symbol.isGearRatio()) {
+                final List<EngineSchematicNumber> closestNumbers = findCloseNumbers(symbol, numbers);
+                if (closestNumbers.size() == 2) {
+                    gearRatios.add(new GearRatio(symbol, closestNumbers));
+                }
+            }
         }
+        return gearRatios;
+    }
+
+    public List<PartNumber> extractPartNumbers() {
+        load();
         // Extract part numbers
         final List<PartNumber> partNumbers = new ArrayList<>();
         for (EngineSchematicSymbol symbol : symbols) {
-            partNumbers.addAll(findCloseNumbers(symbol, numbers));
+            partNumbers.addAll(findCloseNumbers(symbol, numbers).stream().map(PartNumber::new).toList());
         }
         return partNumbers;
+    }
+
+    private void load() {
+        if (numbers.isEmpty() || symbols.isEmpty()) {
+            // Read in the values to maps
+            for (int rowIndex = 0; rowIndex < lines.size(); rowIndex++) {
+                numbers.addAll(findNumbersFromLine(rowIndex, lines.get(rowIndex)));
+                symbols.addAll(findSymbolsFromLine(rowIndex, lines.get(rowIndex)));
+            }
+        }
     }
 
     protected static List<EngineSchematicNumber> findNumbersFromLine(int rowIndex, String line) {
@@ -75,12 +96,11 @@ public record EngineSchematic(List<String> lines) {
         return !isNumber(character) && character != '.';
     }
 
-    private List<PartNumber> findCloseNumbers(EngineSchematicSymbol symbol, List<EngineSchematicNumber> numbers) {
+    private List<EngineSchematicNumber> findCloseNumbers(EngineSchematicSymbol symbol, List<EngineSchematicNumber> numbers) {
         return numbers
                 .stream()
                 .filter(number -> isInRowRange(number, symbol.rowIndex()))
                 .filter(number -> isInColRange(number, symbol.columnIndex()))
-                .map(PartNumber::new)
                 .toList();
     }
 

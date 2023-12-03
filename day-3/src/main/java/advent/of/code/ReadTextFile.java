@@ -28,6 +28,13 @@ public class ReadTextFile {
                                         .map(PartNumber::number)
                                         .map(EngineSchematicNumber::number)
                                         .reduce(0, Integer::sum)));
+                // What is the sum of all of the gear ratios in your engine schematic?
+                System.out.println(
+                        "Sum of all of the gear ratios in your engine schematic is %s"
+                                .formatted(schematic.findGearRatios()
+                                        .stream()
+                                        .map(GearRatio::getMultipliedRatio)
+                                        .reduce(0, Integer::sum)));
             } else {
                 System.out.println("Resource not found: " + resourcePath);
             }
