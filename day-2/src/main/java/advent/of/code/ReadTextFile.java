@@ -29,6 +29,13 @@ public class ReadTextFile {
                                         .map(Game::id)
                                         .reduce(0, Integer::sum)
                         ));
+                // For each game, find the minimum set of cubes that must have been present. What is the sum of the power of these sets?
+                System.out.println("Sum of the power of these sets is %s".formatted(
+                        gameStats
+                                .stream()
+                                .map(Game::power)
+                                .reduce(0, Integer::sum)
+                ));
             } else {
                 System.out.println("Resource not found: " + resourcePath);
             }

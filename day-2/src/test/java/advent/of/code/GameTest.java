@@ -29,4 +29,24 @@ public class GameTest {
     void playableTests(Game game, int countOfRed, int countOfGreen, int countOfBlue, boolean playable) {
         Assertions.assertThat(game.isPlayable(countOfRed, countOfGreen, countOfBlue)).isEqualTo(playable);
     }
+
+    private static Stream<? extends Arguments> powerOfGame() {
+        return Stream.of(
+                Arguments.of(new Game(0, 0, 0, 0), 0),
+                Arguments.of(new Game(0, 2, 0, 0), 2),
+                Arguments.of(new Game(0, 0, 2, 0), 2),
+                Arguments.of(new Game(0, 0, 0, 2), 2),
+                Arguments.of(new Game(0, 2, 2, 0), 4),
+                Arguments.of(new Game(0, 2, 0, 2), 4),
+                Arguments.of(new Game(0, 0, 2, 2), 4),
+                Arguments.of(new Game(0, 3, 2, 2), 12),
+                Arguments.of(new Game(0, 3, 3, 3), 27)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "powerOfGame")
+    void powerTests(Game game, int expectedPower) {
+        Assertions.assertThat(game.power()).isEqualTo(expectedPower);
+    }
 }
