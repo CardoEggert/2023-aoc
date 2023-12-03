@@ -15,7 +15,9 @@ public class ReadTextFile {
                 String line;
                 final List<Integer> calibrationValues = new ArrayList<>();
                 while ((line = reader.readLine()) != null) {
-                    calibrationValues.add(NumberExtractor.extractFirstAndLastNumberCombination(line));
+                    calibrationValues.add(
+                            NumberExtractor.extractFirstAndLastNumberCombination(
+                                    StringConverter.extractNumberedString(line)));
                 }
                 System.out.println(
                         "Sum of all calibration values is %s"
