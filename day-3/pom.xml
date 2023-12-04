@@ -8,7 +8,7 @@
     <artifactId>day-3</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>Day-1</name>
+    <name>Day-3</name>
 
     <properties>
         <java.version>19</java.version>
