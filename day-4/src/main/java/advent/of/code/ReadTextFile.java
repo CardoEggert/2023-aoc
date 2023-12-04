@@ -22,6 +22,11 @@ public class ReadTextFile {
                 }
                 // Take a seat in the large pile of colorful cards. How many points are they worth in total?
                 System.out.println("There are %s points in total".formatted(scratchCards.stream().map(ScratchCard::getPoints).reduce(0, Integer::sum)));
+                /*
+                Process all of the original and copied scratchcards until no more scratchcards are won.
+                Including the original set of scratchcards, how many total scratchcards do you end up with?
+                 */
+                System.out.println("Ended up with a total of %s scratchcards".formatted(new ScratchCardLoto(scratchCards).getTotalScratchCardsCount()));
             } else {
                 System.out.println("Resource not found: " + resourcePath);
             }

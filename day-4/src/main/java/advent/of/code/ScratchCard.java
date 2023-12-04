@@ -1,12 +1,12 @@
 package advent.of.code;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public record ScratchCard(int id, List<Integer> winningNumbers, List<Integer> numbers) {
 
     public static ScratchCard extractScratchCard(String line) {
-        // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
         final String[] cardIdAndNumbersSplit = line.split(":");
         final Integer cardId = Integer.parseInt(cardIdAndNumbersSplit[0].replaceAll("\\D", ""));
         final String[] winningNumbersAndNumbers = cardIdAndNumbersSplit[1].split("\\|");
@@ -15,12 +15,28 @@ public record ScratchCard(int id, List<Integer> winningNumbers, List<Integer> nu
         return new ScratchCard(cardId, winningNumbers, numbers);
     }
 
+    public List<ScratchCard> getWonCopies(List<ScratchCard> remainingCards) {
+        if (remainingCards.isEmpty()) {
+            return List.of();
+        }
+        final List<ScratchCard> wonCopies = new ArrayList<>();
+        final Integer matchedNumbersCount = getMatchingNumbersCount();
+        for (int countIter = 0; countIter < matchedNumbersCount; countIter++) {
+            wonCopies.add(remainingCards.get(countIter % remainingCards.size()));
+        }
+        return wonCopies;
+    }
+
     public Integer getPoints() {
         final List<Integer> matchingWinningNumbers = numbers.stream().filter(winningNumbers::contains).toList();
         if (matchingWinningNumbers.isEmpty()) {
             return 0;
         }
         return calculatePoints(matchingWinningNumbers.size());
+    }
+
+    public Integer getMatchingNumbersCount() {
+        return (int) numbers.stream().filter(winningNumbers::contains).count();
     }
 
     private Integer calculatePoints(Integer countOfMatchingNumbers) {
