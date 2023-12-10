@@ -50,7 +50,7 @@ class AlmanacTest {
         final Almanac almanac = Almanac.read(ALMANAC);
 
         Assertions.assertThat(almanac).isNotNull();
-        Assertions.assertThat(almanac.seeds()).isEqualTo(List.of(79L, 14L, 55L, 13L));
+        Assertions.assertThat(almanac.seedValues()).isEqualTo(List.of(new SeedValue(79L, 14L), new SeedValue(55L, 13L)));
         assertMapContains(
                 almanac.map(),
                 Category.SEED,
@@ -115,6 +115,6 @@ class AlmanacTest {
     @Test
     void lowestLocationNumber() {
         final Almanac almanac = Almanac.read(ALMANAC);
-        Assertions.assertThat(almanac.findLowest(Category.LOCATION)).isEqualTo(35L);
+        Assertions.assertThat(almanac.findLowest(Category.LOCATION)).isEqualTo(46L);
     }
 }

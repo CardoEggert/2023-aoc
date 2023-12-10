@@ -2,11 +2,11 @@ package advent.of.code;
 
 import java.util.*;
 
-public record Almanac(List<Long> seeds, Map<Category, AlmanacDestinationRange> map) {
+public record Almanac(List<SeedValue> seedValues, Map<Category, AlmanacDestinationRange> map) {
 
     public static Almanac read(String almanacText) {
         final String[] splitByLines = almanacText.split("\n");
-        final List<Long> seeds = Arrays.stream(splitByLines[0].split("seeds: ")[1].split(" ")).map(Long::parseLong).toList();
+        final List<Long> seedsInfo = Arrays.stream(splitByLines[0].split("seeds: ")[1].split(" ")).map(Long::parseLong).toList();
         final Map<Category, AlmanacDestinationRange> categoryMap = new HashMap<>();
         Category source = null;
         Category destination = null;
@@ -26,15 +26,29 @@ public record Almanac(List<Long> seeds, Map<Category, AlmanacDestinationRange> m
         }
         // Add last map as well
         categoryMap.putIfAbsent(source, new AlmanacDestinationRange(destination, ranges));
-        return new Almanac(seeds, categoryMap);
+        return new Almanac(mapToSeedValues(seedsInfo), categoryMap);
+    }
+
+    private static List<SeedValue> mapToSeedValues(List<Long> seedInfo) {
+        final List<SeedValue> seedValuesList = new ArrayList<>();
+        for (int i = 0; i < seedInfo.size(); i = i + 2) {
+            seedValuesList.add(new SeedValue(seedInfo.get(i), seedInfo.get(i + 1)));
+        }
+        return seedValuesList;
     }
 
     public Long findLowest(Category endDestination) {
+        long seedId = 0L;
         Long lowestDestinationValue = Long.MAX_VALUE;
-        for (Long seed : seeds) {
-            final Long destinationValue = findDestinationValue(Category.SEED, endDestination, seed);
-            if (destinationValue < lowestDestinationValue) {
-                lowestDestinationValue = destinationValue;
+        seedValues.sort(Comparator.comparingLong(SeedValue::start));
+        for (SeedValue seedValue : seedValues) {
+            System.out.println("Processing seed value start:%s and range: %s".formatted(seedValue.start(), seedValue.range()));
+            for (long seed = seedValue.getStartingValue(seedId); seed < seedValue.getEndingValue(); seed++) {
+                final Long destinationValue = findDestinationValue(Category.SEED, endDestination, seed);
+                if (destinationValue < lowestDestinationValue) {
+                    lowestDestinationValue = destinationValue;
+                }
+                seedId = seed;
             }
         }
         return lowestDestinationValue;
