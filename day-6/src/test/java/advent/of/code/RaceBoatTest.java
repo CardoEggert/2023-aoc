@@ -35,7 +35,8 @@ class RaceBoatTest {
         return Stream.of(
                 Arguments.of(new RaceDetail(7, 9), 4),
                 Arguments.of(new RaceDetail(15, 40), 8),
-                Arguments.of(new RaceDetail(30, 200), 9)
+                Arguments.of(new RaceDetail(30, 200), 9),
+                Arguments.of(new RaceDetail(71530, 940200), 71503)
         );
     }
 

@@ -1,19 +1,19 @@
 package advent.of.code;
 
-public record RaceBoat(int speedIncreaseByMillisecond) {
+public record RaceBoat(long speedIncreaseByMillisecond) {
 
-    public int getTravelledDistance(int holdButtonForMilliseconds, int raceDuration) {
+    public long getTravelledDistance(long holdButtonForMilliseconds, long raceDuration) {
         if (holdButtonForMilliseconds >= raceDuration) {
             return 0;
         }
-        final int speed = speedIncreaseByMillisecond * holdButtonForMilliseconds;
+        final long speed = speedIncreaseByMillisecond * holdButtonForMilliseconds;
         return speed * (raceDuration - holdButtonForMilliseconds);
     }
 
-    public int countNumberOfWaysToBeatRace(RaceDetail raceDetail) {
-        final int raceDuration = raceDetail.raceTime();
-        final int raceDistanceRecord = raceDetail.distanceRecord();
-        int numberOfWaysToBeatRecord = 0;
+    public long countNumberOfWaysToBeatRace(RaceDetail raceDetail) {
+        final long raceDuration = raceDetail.raceTime();
+        final long raceDistanceRecord = raceDetail.distanceRecord();
+        long numberOfWaysToBeatRecord = 0;
         for (int i = 0; i < raceDuration; i++) {
             if (raceDistanceRecord < getTravelledDistance(i, raceDuration)) {
                 numberOfWaysToBeatRecord++;

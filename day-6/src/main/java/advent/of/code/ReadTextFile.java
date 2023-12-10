@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 
 public class ReadTextFile {
 
@@ -19,14 +18,9 @@ public class ReadTextFile {
                 while ((line = reader.readLine()) != null) {
                     sb.append(line).append('\n');
                 }
-                /*
-                Determine the number of ways you could beat the record in each race. What do you get if you multiply these numbers together?
-                 */
-                final RaceDetails raceDetails = RaceDetails.read(sb.toString());
+                final RaceDetail actualRace = RaceDetail.read(sb.toString());
                 final RaceBoat boat = new RaceBoat(1);
-                final List<Integer> combinationsCount = raceDetails.numberOfWaysToBeatRace(boat);
-                System.out.println("Combinations are here for winning those races: %s".formatted(combinationsCount));
-                System.out.println("Multiplying them together gives: %s".formatted(combinationsCount.stream().reduce(1, (a, b) -> a * b)));
+                System.out.println("How many ways to beat the record in one much longer race? Answer: %s".formatted(boat.countNumberOfWaysToBeatRace(actualRace)));
             } else {
                 System.out.println("Resource not found: " + resourcePath);
             }
